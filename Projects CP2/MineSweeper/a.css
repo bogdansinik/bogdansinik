@@ -1,0 +1,153 @@
+
+
+BODY {
+    background-image: url(joker_background.jpg);
+    background-size: cover;
+    color: #DDDDDD;
+    text-align: center;
+    font-family: 'New Rocker';
+  }
+  
+  H1 {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: normal;
+  }
+  #grid {
+    float: left;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    margin-left: 100px;
+    
+   /* margin-left: auto;
+    margin-right: auto;*/
+  }
+  
+  #grid TR TD{
+    border:1px solid white;
+    background-image: url(joker.png);
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 35%;
+    color: white;
+    cursor: pointer;
+  }
+  
+  #grid TR TD.clicked {
+      background: green;
+  }
+  
+  #grid TR TD.mine {
+      background: #FF0000;
+  }
+  
+  BUTTON {
+    margin: 12px;
+  }
+  
+  #menuDiv{
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 0px;
+    /*background-color: green;*/
+    margin-right: 100px;
+    
+  }
+  #newGameBtn{
+      border-bottom: green 3px solid;
+      width: 50%;
+      padding: 15px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 30px;
+      font-weight: bold;
+      background-color: white;
+      color: green;
+      margin-top: 150px;
+
+  }
+  #newGameBtn:hover{
+    background-color: green;
+    color: white;
+    cursor: default;
+  }
+  #diff{
+      padding: 5px;
+      border: green 3px solid;
+      border-radius: 30px;
+      padding-left: 25px;
+      font-weight: bold;
+      background-color: white;
+      color: green;
+      font-family: 'New Rocker'; 
+  }
+  #diff:hover{
+    background-color: green;
+    color: white;
+  }
+  .mines{
+      background-color: red;
+
+  }
+  #title{
+      width: 20%;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: xx-large;
+      color: purple;
+      /*background-color: white;*/
+      border-bottom: red 5px double;
+      margin-top: 35px;
+      padding-bottom: 7px;
+      border-radius: 15px;
+      cursor: default;
+
+  }
+  .glow {
+    font-size: 80px;
+    color: #fff;
+    text-align: center;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+  
+  @-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 20px #00e696, 0 0 30px #00e67b, 0 0 40px #00e62e, 0 0 50px #00e62e, 0 0 60px #00e62e;
+    }
+    to {
+      text-shadow: 0 0 20px #fff, 0 0 20px #00e62e, 0 0 30px #00e62e, 0 0 40px #00e62e, 0 0 50px #00e62e, 0 0 60px #00e62e, 0 0 70px #00e62e;
+    }
+  }
+
+  #audio{
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      
+  }
+  #timer{
+    float: right;
+    font-size: 50px;
+    margin-right: 110px ;
+    text-shadow: red 6px 6px 6px;
+    cursor: default;
+    margin-top: 140px;
+  }
+  #wins{
+    font-size: 50px;
+    text-shadow: purple 6px 6px 6px;
+    position: absolute;
+    right: 110px;
+    bottom: 200px;
+
+  }

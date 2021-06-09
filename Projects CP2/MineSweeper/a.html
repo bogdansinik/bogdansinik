@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=New+Rocker&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="a.css">
+    <script src="a.js"></script>
+    
+    
+    <script>
+        var minefield = null;
+        var winCounter = 0;
+        function newGame() {
+            if(winCounter == 1){
+            document.getElementById("wins").innerHTML = "You have "+winCounter+ " win!";
+            }else{
+                document.getElementById("wins").innerHTML = "You have "+winCounter+ " wins!";
+            }
+            clearInterval(interval);
+            countDown();
+            var start = new sound("start.mp3");
+            start.play();
+            var diff = document.getElementById("diff").value;
+            if(diff=='easy'){
+            minefield = new Minefield(7, 7, 7);//print();
+            createGrid(7,7);
+            
+            
+            
+            }
+            else if(diff=='normal'){
+            minefield = new Minefield(10, 10, 10);//print();
+            createGrid(10,10);
+            
+            }else{
+                minefield = new Minefield(13, 13, 13);//print();
+                createGrid(13,13);
+               
+            }
+            }
+        function check() {
+            var x = document.getElementById("x").value;
+            var y = document.getElementById("y").value;
+            window.alert(minefield.symbol(x, y));
+            }
+        function hit() {
+            var x = document.getElementById("x").value;
+            var y = document.getElementById("y").value;
+            minefield.unveil(x, y);print();
+            }
+        function print() {
+            var remaining = minefield.veiled + minefield.explosions- 10;
+            document.getElementById("output").innerHTML =minefield.toString() + "\n" + remaining + "/" +minefield.explosions;
+            }
+            createGrid();
+        function createGrid(x,y) {
+            var table = document.getElementById("grid");
+            table.innerHTML = '';
+            for (let i = 0; i < x; i++) {
+                var row = table.insertRow(i);
+                for (let j = 0; j < y; j++) {
+                    var cell = row.insertCell(j);
+                    cell.innerHTML = '';
+                    cell.onclick = function(){
+                        clickCell(this);
+                        changeTable(x,y);
+                        checkForMine(x,y);
+                        var click = new sound("click.mp3");
+                        click.play();
+                        //changeTable();
+                        /*cell.className="clicked";
+                        minefield.unveil(j,i);
+                        print();
+                        cell.innerHTML = "x";
+                        if(cell.innerHTML=''){
+                            cell.innerHTML = "x"+symbol(j,i);
+                        }*/
+                    }
+                }
+                
+            }
+        }
+        function clickCell(cell){
+            
+            var cellRow = cell.parentNode.rowIndex;
+            var cellCol = cell.cellIndex;
+            minefield.unveil(cellCol,cellRow);
+            //cell.innerHTML = minefield.symbol(cellCol,cellRow);
+            //document.getElementById("CHECK").innerHTML = symbol(cellCol,cellRow);
+            cell.className="clicked";
+            
+           /*if(minefield.symbol(cellCol,cellRow) == 'x'){
+                cell.className="mines";
+                revealAllMines();
+            }*/
+            
+            //print();
+        //changeTable();
+        }
+        function changeTable(x,y){
+            var table = document.getElementById("grid");
+            for (let i = 0; i < x; i++) {
+                for (let j = 0; j < y; j++) {
+                    var cell = table.rows[j].cells[i];
+                    
+                    if(minefield.symbol(i,j)!= '.'){
+                        cell.className="clicked";
+                        if(minefield.symbol(i,j) == 0){
+                            cell.innerHTML = "";
+                            cell.style.backgroundColor = "lightgreen";
+                        }else{
+                        cell.innerHTML = minefield.symbol(i,j);
+                        }
+                    } 
+                    
+                }
+               
+                
+            }
+        }
+        
+        function checkForMine(x,y){
+            var counter = 0;
+            var table = document.getElementById("grid");
+            for (let i = 0; i < x; i++) {
+                for (let j = 0; j < y; j++) {
+                    var cell = table.rows[j].cells[i];
+                    
+                    if(cell.innerHTML == 'x'){
+                        cell.innerHTML = '';
+                        var batman1 = new sound("batman.mp3");
+                        batman1.play();
+                        //cell.style.backgroundColor = "red";
+                        cell.style.backgroundImage = "url('batman.png')";
+                        cell.style.backgroundSize = "cover";
+                        setTimeout( window.alert("GAME OVER! BATMAN IS HERE!"), 3000);
+                        //window.alert("GAME OVER");
+                        counter++;
+                        //location.reload();
+                        setTimeout("newGame()", 2000);
+                    
+                }
+            }
+            
+            }
+            if(counter == 0 && minefield.veiled ==  x){
+                window.alert("WELL DONE");
+                var laugh = new sound("laugh.mp3");
+                        laugh.play();
+                        winCounter++;
+                        
+            }
+        }
+        
+        function sound(src) {
+            this.sound = document.createElement("audio");
+            this.sound.src = src;
+            this.sound.setAttribute("preload", "auto");
+            this.sound.setAttribute("controls", "none");
+            this.sound.style.display = "none";
+            document.body.appendChild(this.sound);
+            this.play = function(){
+                this.sound.play();
+            }
+            this.stop = function(){
+                this.sound.pause();
+            }
+            }
+        
+        
+            
+        
+    </script>
+</head>
+<body>
+    <h1 id="title" class="glow">JOKER'S MINESWEEPER</h1>
+<!--<pre id="output"></pre>
+            <p>
+                <input type="number" id="x" value = "0" min="0" max="9">
+                <input type="number" id="y" value = "0" min="0" max="9">
+                <input type="button" value="Check" onclick="check()">
+                <input type="button" value="Hit" onclick="hit()">
+                <input type="button" value="New" onclick="newGame()">
+            </p>
+        -->
+            <div>
+            <table id="grid"></table>
+            </div>
+            <div id="menuDiv">
+                <h1 id="newGameBtn" onclick="newGame()">NEW GAME</h1>
+                <select name="selectDiff" id="diff">
+                    <option value="easy">EASY</option>
+                    <option value="normal">NORMAL</option>
+                    <option value="hard">HARD</option>
+                </select>
+            </div>
+            <audio id="audio" autoplay controls muted>
+                <source src="JokerSong.mp3" type="audio/mpeg">
+        </audio>
+        <h3 id="timer"><span id="time-left"></span></h3>
+        <h3 id="wins"></h3>
+    <script>
+        
+         //document.addEventListener('DOMContentLoaded',() => {
+            const timeLeftDisplay = document.getElementById("time-left");
+            const startBtn = document.getElementById('newGameBtn');
+            var timeLeft;
+           /* var startTimeLeft;
+            var diff = document.getElementById("diff").value;
+                    if(diff=='easy'){
+                        startTimeLeft = 100;
+                        timeLeft = startTimeLeft;
+                    }else if(diff=='normal'){
+                        startTimeLeft = 200;
+                        timeLeft = startTimeLeft;
+                    }else{
+                        startTimeLeft = 300;
+                        timeLeft = startTimeLeft;
+                    }*/
+                    var interval; 
+            function countDown(){
+                var diff = document.getElementById('diff').value;
+                
+                if(diff=='easy'){
+                        timeLeft = 100;
+                        
+                    }else if(diff=='normal'){
+                        timeLeft = 200;
+                    }else{
+                        timeLeft = 300;
+                    }
+                    
+               interval = setInterval(function(){
+                    //var diff = document.getElementById("diff").value;
+                    
+                    if(timeLeft <= 0 ){
+                        clearInterval(timeLeft = 0);
+                        var batman = new sound("batman.mp3");
+                        batman.play();
+                        window.alert("TIME IS OUT! BATMAN IS HERE! GAME OVER!");
+                        setTimeout(newGame(),1000);
+                        //nInterval = setInterval(flashText, 1000);
+                        
+                        
+                        
+                    }
+
+                    timeLeftDisplay.innerHTML ="Seconds left:"+timeLeft;
+                    timeLeft -= 1;
+                },1000);
+                
+                
+            }
+           
+            //startBtn.addEventListener('click', countDown);
+        
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<html>
+<head>
+<title>Draw</title>
+<meta charset="UTF-8">
+<style>
+#canvas {
+display: inline-block;
+box-sizing: border-box;
+border: 1px solid black;
+border-radius: 30px;
+
+}
+#stickers {
+display: inline-block;
+width: 50px;
+height: 50px;
+margin-left: 50px;
+}
+#mystickers{
+display: inline-block;
+width: 50px;
+height: 50px;
+margin-left: 20px;
+}
+.sticker {
+display: inline-block;
+box-sizing: border-box;
+width: 50px;
+height: 50px;
+margin: 2px;
+
+}
+.color {
+display: inline-block;
+box-sizing: border-box;
+width: 48px;
+height: 30px;
+border: 1px solid wheat;
+margin: 2px 1px 0px 1px;
+
+}
+
+#currentColor{
+    font-weight: bold;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    margin-left: 320px;
+    width: 200px;
+    text-shadow: 2px 2px gray;
+    font-size: 20px;
+}
+span{
+    position: absolute;
+    left: 550px;
+    top: 634px;
+    font-weight: bold;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-shadow: 2px 2px gray;
+    font-size: 20px;
+}
+select{
+    border: none;
+    border-radius: 20px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: transparent;
+    text-shadow: 2px 2px gray;
+    font-size: 20px;
+}
+
+
+
+#eraser{
+    
+    text-align: center;
+    position: absolute;
+    left: 820px;
+    top: 620px;
+    border: black 2px solid;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    background-image: url("rubber.jpg") ;
+    background-size: cover;
+   
+    
+}
+#eraser:hover{
+    box-shadow: gray 3px 3px 3px;
+}
+#clear{
+    background-color: green;
+    color: white;
+    position: absolute;
+    left: 870px;
+    top: 670px;
+    border-radius: 30px;
+    width: 50px;
+    height: 50px;
+    
+}
+#clear:hover{
+    box-shadow: gray 3px 3px 3px;
+}
+
+body{
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+canvas{
+    background-color: white;
+}
+#stickerSizeInfo{
+    position: absolute;
+    left: 10px;
+}
+#plus{
+   
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 1020px;
+    top: 20px;
+    color: green;
+    background-color: greenyellow;
+    border-radius: 10px;
+    border: 1px green solid;
+    font-size: 30px;
+}
+#plus:hover{
+    background-color: green;
+    color: greenyellow;
+}
+#minus{
+    
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 1020px;
+    top: 72px;
+    color: green;
+    background-color: greenyellow;
+    border-radius: 10px;
+    border: 1px green solid;
+    font-size: 30px;
+}
+
+#minus:hover{
+    background-color: green;
+    color: greenyellow;
+}
+</style>
+<script>
+ var canvas, ctx, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
+
+    var x = "black",
+        y = 2;
+    
+    function init() {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
+    
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false); 
+    }
+    
+    function color(obj) {
+        switch (obj.id) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+            case "gray":
+                x = "gray";
+                break;
+            case "silver":
+                x = "silver";
+                break;
+            case "maroon": 
+                x = "maroon";
+                break;  
+            case "olive":
+                x = "olive";
+                break;
+            case "lime":
+                x = "lime";
+                break;
+            case "teal":
+                x = "teal";
+                break;
+            case "aqua":
+                x = "aqua";
+                break;
+            case "navy":
+                x = "navy";
+                break;
+            case "purple":
+                x = "purple";
+                break;
+            case "fuchsia":
+                x = "fuchsia";
+                break;
+
+            /*"teal", "aqua", "navy", "blue", "purple", "fuchsia"];*/
+        }
+       y = 2;
+        
+        document.getElementById(x).style.boxShadow = "3px 3px 3px black";
+        setTimeout('document.getElementById(x).style.boxShadow = ""',500);
+        
+        document.getElementById("currentColor").innerHTML = "Current color: " + x.toUpperCase();
+        document.getElementById("currentColor").style.color = x;
+        document.getElementById("drawingStyle").style.color = x;
+        document.getElementById("drawingStyleLabel").style.color = x;
+        document.getElementById("stickerSizeInfo").style.color = x;
+        if(x== "black" | x=="navy" | x == "blue"){
+            document.getElementById("currentColor").style.textShadow = "2px 2px gray";
+            document.getElementById("drawingStyle").style.textShadow = "2px 2px gray";
+            document.getElementById("drawingStyleLabel").style.textShadow = "2px 2px gray";
+            document.getElementById("stickerSizeInfo").style.textShadow = "2px 2px gray";
+        }else{
+        document.getElementById("currentColor").style.textShadow = "2px 2px black";
+        document.getElementById("drawingStyle").style.textShadow = "2px 2px black";
+        document.getElementById("drawingStyleLabel").style.textShadow = "2px 2px black";
+        document.getElementById("stickerSizeInfo").style.textShadow = "2px 2px black";
+
+        }
+        
+    }
+    
+    function draw() {
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+        var style = document.getElementById("drawingStyle");
+        if(style.value == "smooth"){
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowBlur = 0;
+        }
+        if(style.value == "default"){
+            ctx.lineCap = 'butt';
+            ctx.lineJoin = 'butt';
+            ctx.shadowBlur = 0;
+        }
+        if(style.value == "shadow"){
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgb(0, 0, 0)';
+        
+        }
+    }
+    
+    
+   
+    
+    function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+    
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, y, y);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
+    function setThickness(event){
+        if(event.deltaY < 0){
+                y *= 1.1;
+            }
+            else{
+                y*= 0.9;
+                
+            }
+    }
+    function clearAll(){
+        ctx.clearRect(0, 0, canvas.width , canvas.height);
+    }
+    function eraser() {
+        y=30;
+        x="white";
+        document.getElementById("drawingStyle").value = "default";
+    }
+
+    var j=k=50;
+    function stickerSizePlus(event){
+        
+                j += 10;
+                k += 10;
+                document.getElementById("stickerSizeInfo").innerHTML = "Current size of the sticker is: "+k.toString()+"px";
+    }
+    function stickerSizeMinus(event){
+               
+        if(j>50 && k>50){
+        
+                j -=10;
+                k -=10;
+                document.getElementById("stickerSizeInfo").innerHTML = "Current size of the sticker is: "+k.toString()+"px";
+        }
+    }
+ 
+</script>
+</head>
+
+<body onload="init()">
+<canvas id="canvas" width="800" height="600" onwheel="setThickness(event)" ondragover="dragOver(event)" ondrop="drop(event)"></canvas>
+<div id="stickers">
+<img id="img1" class="sticker" src="http://clipart-library.com/data_images/487831.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img2" class="sticker" src="http://clipart-library.com/data_images/487787.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img3" class="sticker" src="http://clipart-library.com/data_images/487743.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img4" class="sticker" src="http://clipart-library.com/data_images/487741.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img5" class="sticker" src="http://clipart-library.com/data_images/487815.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img6" class="sticker" src="http://clipart-library.com/data_images/402767.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img7" class="sticker" src="http://clipart-library.com/data_images/363964.gif" draggable="true" ondragstart="startDrag(event)">
+<img id="img8" class="sticker" src="http://clipart-library.com/data_images/487785.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img9" class="sticker" src="http://clipart-library.com/data_images/487810.jpg" draggable="true" ondragstart="startDrag(event)">
+<img id="img10" class="sticker" src="http://clipart-library.com/image_gallery/464509.png" draggable="true" ondragstart="startDrag(event)">
+<img id="img11" class="sticker" src="http://clipart-library.com/image_gallery/464541.jpg" draggable="true" ondragstart="startDrag(event)">
+</div>
+<div id="mystickers">
+    <img src="sticker1.png" id="sticker1" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker2.jpg" id="sticker2" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker3.png" id="sticker3" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker4.png" id="sticker4" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker5.png" id="sticker5" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker6.jpg" id="sticker6" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker7.jpg" id="sticker7" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker8.png" id="sticker8" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker9.png" id="sticker9" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker10.jpeg" id="sticker10" class="sticker" draggable="true" ondragstart="startDrag(event)">
+    <img src="sticker12.png" id="sticker11" class="sticker" draggable="true" ondragstart="startDrag(event)">
+
+</div>
+<div></div>
+
+<div id="eraser" onclick="eraser()"></div>
+<button id="clear" onclick="clearAll()">Clear</button>
+<p id="currentColor">Current color: BLACK</p>
+<span id="drawingStyleLabel">Current style: <select name="drawingStyle" id="drawingStyle">
+    <option value="default">DEFAULT</option>
+    <option value="shadow">SHADOW</option>
+    <option value="smooth">SMOOTH</option>
+</select>
+</span>
+
+<button id="plus" onclick="stickerSizePlus(event)">+</button>
+<button id="minus" onclick="stickerSizeMinus(event)">-</button>
+<span id="stickerSizeInfo">Current size of the sticker is: 50px</span>
+
+</body>
+<script>
+  
+    var colorNames = ["black", "gray", "silver", "white", "maroon", "red", "olive", "yellow", "green",
+    "lime", "teal", "aqua", "navy", "blue", "purple", "fuchsia"];
+    for (var i = 0; i < 16; i++) {
+    document.write(`<div id="${colorNames[i]}" class="color" onclick="color(this)" style="background-color:
+    ${colorNames[i]}" ></div>`);
+    }
+
+
+
+    
+
+    function dragOver(ev) {
+	// the elements can't ususaly be dropped into other elements so we are perventing the usual dealing with the element
+        ev.preventDefault();
+    }
+
+    function startDrag(ev) {
+        
+        ev.dataTransfer.setData("text", ev.target.id);
+        
+  // we get the id of the picture aka draggable element
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var image=document.getElementById(data);
+        ctx.drawImage(image, ev.clientX - canvas.offsetLeft -25, ev.clientY - canvas.offsetTop - 25, j, k);
+       
+    }
+    
+</script>
+</html>
